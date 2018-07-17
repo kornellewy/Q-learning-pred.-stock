@@ -20,6 +20,4 @@ def getState(data, t, n):
 	res = []
 	for i in range(n - 1):
 		res.append(sigmoid(block[i + 1] - block[i]))
-    # return
-    res = np.arrey([res])
-    return res
+    return np.array([res])

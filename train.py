@@ -3,8 +3,7 @@ from functions import *
 import sys
 # we check inputs
 if len(sys.argv) != 4:
-	print "Usage: python train.py [stock] [window] [episodes]"
-    exit()
+	print("Usage: python train.py [stock] [window] [episodes]")
 # we save inputs
 stock_name, window_size, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 # get agent
@@ -24,14 +23,14 @@ for episode in range(episode_count + 1):
         # get action form agent
         action = agent.act(state)
         # sit action
-		next_state = getState(data, t + 1, window_size + 1)
+        next_state=getState(data,t+1,window_size+1)
         reward = 0
         # buy action
         if action ==1:
             agent.inventory.append(data[t])
             print("buy: " + formatPrice(data[t]))
         # sell action and if we have more than 0 stock
-        elif action = 2 and len(agent.inventory) > 0 :
+        elif action == 2 and len(agent.inventory) > 0 :
             bought_price = agent.inventory.pop(0)
             reward = max(data[t]-bought_price, 0)
             total_profit += data[t] - bought_price
@@ -46,11 +45,9 @@ for episode in range(episode_count + 1):
         state = next_state
         # we print how much we earn
         if done:
-    		print "--------------------------------"
-    		print stock_name + " Total Profit: " + formatPrice(total_profit)
-            print "--------------------------------"
+            print(stock_name + " Total Profit: " + formatPrice(total_profit))
         if len(agent.memory) > batch_size:
             agent.expReplay(batch_size)
     # we save model every 10 episodes
     if episode % 10 ==0:
-        agent.model.("models/model_ep" + str(episode))
+        agent.model.save("models/model_ep" + str(episode))
