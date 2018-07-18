@@ -16,16 +16,17 @@ class Agent:
         self.memory = deque(maxlen=1000)
         self.inventory = []
         self.model_name = model_name
+        self.is_eval = is_eval
         # varables for RL agent
         self.gamma = 0.95
         self.epsilon = 1.0
         self.epsilon_min = 0.01
-        self.epsilon_decaz = 0.995
+        self.epsilon_decay = 0.995
         # we check if we load the model
         if is_eval:
             self.model = load_model("models/" + model_name)
         else:
-            self.model = self.model()
+            self.model = self._model()
 
     # model method
     def _model(self):
@@ -67,9 +68,9 @@ class Agent:
             target = reward
             # we check if we miss
             if not done:
-                target = reward + self.gamma * np.amax(self.predict(next_state)[0])
+                target = reward + self.gamma * np.amax(self.model.predict(next_state)[0])
             target_f =self.model.predict(state)
             target_f[0][action] = target
             self.model.fit(state, target_f, epochs = 1, verbose=0)
         if self.epsilon > self.epsilon_min:
-            self.epsilon *= self.epsilon_min
+            self.epsilon *= self.epsilon_decay

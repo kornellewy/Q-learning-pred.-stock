@@ -20,6 +20,7 @@ for episode in range(episode_count + 1):
     total_profit = 0
     agent.inventory = []
     for t in range(data_len):
+        print("t: " , t , " over " , len(data)-1)
         # get action form agent
         action = agent.act(state)
         # sit action
